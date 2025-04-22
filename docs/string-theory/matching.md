@@ -58,14 +58,14 @@ P[4] = {29 , 31, 137, 199},
 IP[4] = {758620695, 838709685, 13138691, 52763884},
 MOD[4] = {1000000007, 1000000009, 100000037, 100000123};
 
-int pw[NBH][MAXN], ipw[NBH][MAXN];
+int pw[NBH][N], ipw[NBH][N];
 
 void precompute() {
     for (int pi = 0; pi < NBH; ++pi) {
         pw[pi][0] = ipw[pi][0] = 1;
     }
 
-    for (int i = 1; i < MAXN; ++i) {
+    for (int i = 1; i < N; ++i) {
         for (int pi = 0; pi < NBH; ++pi) {
             pw[pi][i] = 1ll * pw[pi][i-1] * P[pi] % MOD[pi];
             ipw[pi][i] = 1ll * ipw[pi][i-1] * IP[pi] % MOD[pi];
