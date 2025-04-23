@@ -16,4 +16,4 @@ At the top of the file, please use the following format :
  */
 ```
 
-Make sure to use templates only from this repository.
+Make sure to use templates only from the `docs` folder.
