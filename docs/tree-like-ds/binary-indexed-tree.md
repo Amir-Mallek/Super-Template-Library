@@ -99,10 +99,10 @@ struct BIT2D
             for (int j = y + 1; j <= m; j += (j & -j))
                 t[i][j] += val;
     }
-    T query(int x, int y)
+    T query(int x, int y)   /*Warning : use i & j not x & y*/
     {
         T res = T();
-        for (int i = x + 1; i > 0; i -= (i & -i)) /*Warning : use i & j not x & y*/
+        for (int i = x + 1; i > 0; i -= (i & -i)) 
             for (int j = y + 1; j > 0; j -= (j & -j))
                 res += t[i][j];
         return res;
@@ -125,6 +125,25 @@ struct BIT2D
             if(nxt <= n)
                 t[nxt] += t[idx];
         }
+    }
+    BIT2D(vector<vector<T>> &a) : BIT2D(a.size(), a[0].size())
+    {
+        rep(x, 0, n)
+            rep(y, 0, m){
+                int i = x+1;
+                int j = y+1;
+                t[i][j] += a[x][y];
+                int nxt_i = i + (i & -i);
+                int nxt_j = j + (j & -j);
+                /* As usual */
+                if(nxt_i <= n)
+                    t[nxt_i][j] += t[i][j];
+                if(nxt_j <= m)
+                    t[i][nxt_j] += t[i][j];
+                /* Now, plot twist */
+                if(nxt_i <= n && nxt_j <= m)
+                    t[nxt_i][nxt_j] -= t[i][j];
+            }
     }
 
 ```
