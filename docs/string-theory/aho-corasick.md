@@ -1,6 +1,6 @@
 # Aho-Corasick Algorithm
 
-## Trie (Aho-Corasick) with failure links
+## Trie with failure links
 
 ```cpp
 // change it however you like
@@ -61,3 +61,16 @@ void build_trie() {
     }
 }
 ```
+
+### Usage
+
+- `LEN` is the maximum total length of strings that will be add to the trie.
+- `K` is the size of the alphabet. If it is big and you have memory concerns use a map (or a persistent DS) instead of static array.
+- Make you own struct `node` with its special attributes thats the data in every node.
+- `add_node` should be run to initilize the first node of the trie.
+- `add_string` adds a string to the trie in $O(K \cdot |s|)$.
+- `buil_trie` should be run after adding the strings to build failure links and `go` in $O(LEN \cdot K)$. If you use a persistent DS the complexity would be $O(LEN \cdot log(K))$
+
+### Notes
+
+- If you're dealing with `A...Z`, `a..z`, `0..9`, `` ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~  ``, you can chose `K = 128` and where you adding a string use `s[i]` instead of `s[i]-'a'`.
