@@ -102,7 +102,7 @@ struct BIT2D
     T query(int x, int y)
     {
         T res = T();
-        for (int i = x + 1; i > 0; i -= (i & -i))
+        for (int i = x + 1; i > 0; i -= (i & -i)) /*Warning : use i & j not x & y*/
             for (int j = y + 1; j > 0; j -= (j & -j))
                 res += t[i][j];
         return res;

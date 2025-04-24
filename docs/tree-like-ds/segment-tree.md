@@ -16,7 +16,8 @@ struct SegmentTree {
     combine(combine), e(e), n(n) {}
 
     // a is ONE-INDEXED (can be an array)
-    void build(vector<T> &a, int v = 1, int tl = 1, int tr = -1) {
+    template<typename M>
+    void build(vector<M> &a, int v = 1, int tl = 1, int tr = -1) {
         if (tr == -1) tr = n;
         if (tl == tr) {
             t[v] = a[tl];
@@ -56,15 +57,13 @@ struct SegmentTree {
 ```
 How to use : 
 ```cpp
-/* struct Node { ... };*/
-
-SegmentTree<Node> sgt (
-    [](Node a, Node b){return Node(a,b);}, /*combine*/
-    Node(),                               /*neutral*/ 
-    n                                    /*n*/ 
+SegmentTree<ll> sgt (
+    [](ll a, ll b){return max(a,b);}, /*combine*/
+    0ll,                             /*neutral*/ 
+    n                               /*n*/ 
 );
-sgt.build(v);
+sgt.build(v);                     /*vector<ll>*/
 sgt.query(l,r);
-sgt.update(i,Node());
+sgt.update(i,50);
 ```
 Now we can focus more on the logic of `combine`, and the structure of `Node`.
