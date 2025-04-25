@@ -136,14 +136,36 @@ struct BIT2D
                 int nxt_i = i + (i & -i);
                 int nxt_j = j + (j & -j);
                 /* As usual */
-                if(nxt_i <= n)
-                    t[nxt_i][j] += t[i][j];
-                if(nxt_j <= m)
-                    t[i][nxt_j] += t[i][j];
+                if(nxt_i <= n) t[nxt_i][j] += t[i][j];
+                if(nxt_j <= m) t[i][nxt_j] += t[i][j];
                 /* Now, plot twist */
-                if(nxt_i <= n && nxt_j <= m)
-                    t[nxt_i][nxt_j] -= t[i][j];
+                if(nxt_i <= n && nxt_j <= m) t[nxt_i][nxt_j] -= t[i][j];
             }
     }
+    BIT3D(vector<vector<vector<T>>> &a) : BIT3D(a.size(), a[0].size(), a[0][0].size())
+    {
+        rep(x, 0, n)
+            rep(y, 0, m)
+                rep(z, 0, l){
+                int i = x+1;
+                int j = y+1;
+                int k = z+1;
+                t[i][j][k] += a[x][y][z];
+                int nxt_i = i + (i & -i);
+                int nxt_j = j + (j & -j);
+                int nxt_k = k + (k & -k);
+                /* 1-Step */
+                if(nxt_i <= n) t[nxt_i][j][k] += t[i][j][k];
+                if(nxt_j <= m) t[i][nxt_j][k] += t[i][j][k];
+                if(nxt_k <= l) t[i][j][nxt_k] += t[i][j][k];
+                /* 2-Steps */
+                if(nxt_i <= n && nxt_j <= m) t[nxt_i][nxt_j][k] -= t[i][j][k];
+                if(nxt_i <= n && nxt_k <= l) t[nxt_i][j][nxt_k] -= t[i][j][k];
+                if(nxt_j <= m && nxt_k <= l) t[i][nxt_j][nxt_k] -= t[i][j][k];
+                /* 3-Steps */
+                if(nxt_i <= n && nxt_j <= m && nxt_k <= l) t[nxt_i][nxt_j][nxt_k] += t[i][j][k];
+            }
+    }
+    /*Inclusion-Exclusion*/
 
 ```
