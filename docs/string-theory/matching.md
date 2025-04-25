@@ -1,6 +1,6 @@
 # String Matching
 
-## Prefix Function
+## Prefix Function (KMP)
 
 ```cpp
 template<typename T>

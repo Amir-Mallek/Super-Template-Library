@@ -5,15 +5,18 @@
 ```cpp
 // change it however you like
 struct node {
-    int nmax, nmin, depth;
-    node(): nmax(0), nmin(INF) {}
+
 };
 
 constexpr int LEN = 1e6 + 5, K = 26;
 int go[LEN][K], fail[LEN], nd_cnt = 0;
 node tdata[LEN];
 
-// run it once before using the trie to init
+void init() {
+	memset(go[0], -1, sizeof go[0]);
+	nd_cnt = 1;
+}
+
 int add_node() {
     memset(go[nd_cnt], -1, sizeof go[nd_cnt]);
     return nd_cnt++;
@@ -31,10 +34,8 @@ void add_string(const string& s, int id) {
         v = go[v][c];
 
         // add context logic
-        tdata[v].nmax = max(tdata[v].nmax, a[id][i]);
-        tdata[v].nmin = min(tdata[v].nmin, a[id][i]);
-        tdata[v].depth = i;
     }
+    // here v is the last node reached by s
 }
 
 void build_trie() {
@@ -67,7 +68,7 @@ void build_trie() {
 - `LEN` is the maximum total length of strings that will be add to the trie.
 - `K` is the size of the alphabet. If it is big and you have memory concerns use a map (or a persistent DS) instead of static array.
 - Make you own struct `node` with its special attributes thats the data in every node.
-- `add_node` should be run to initilize the first node of the trie.
+- `init` should be run to initilize the first node of the trie even if there multiple test cases.
 - `add_string` adds a string to the trie in $O(K \cdot |s|)$.
 - `buil_trie` should be run after adding the strings to build failure links and `go` in $O(LEN \cdot K)$. If you use a persistent DS the complexity would be $O(LEN \cdot log(K))$
 
