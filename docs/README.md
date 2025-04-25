@@ -23,6 +23,7 @@ Learn how to modify quickly the CLion configuration to be able to :
 using namespace std;
 
 #define rep(i, a, b) for (int i = a; i < (b); ++i)
+typedef long long ll;
 typedef vector<int> vi;
 /*not complete*/
 
