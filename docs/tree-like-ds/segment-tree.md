@@ -3,8 +3,8 @@
 ```cpp
 struct seg_tree {
     struct custom_node {};
-		typedef custom_node node;
-		int n;
+    typedef custom_node node;
+    int n;
     vector<node> t;
 
     seg_tree(int _n) : n(_n), t(vector<node>(4*_n+1)) {}
