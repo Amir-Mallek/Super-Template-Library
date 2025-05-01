@@ -130,3 +130,13 @@ struct r_hash {
 - Comparing $10^6$ string will require in most cases 2 hashes.
 - Use a prime `p` close to the size of the alphabet.
 - You can create different hashing optimizations and formulations based on the problem's nature.
+- If you need $ONLINE$ operations, use a homomorphic hashing function : $H( g(s) ) = G( H(s) )$
+    - It's easier to calculate a $G( hash )$ than to calculate $g(s)$ and then to hash it.
+- If forced to hash on a small space, map to a bigger space (exponentiate).
+- For alphabet hashing w/ range updates, consider using exponentiation ($c \rightarrow B^c$):
+    - Hash function : $\displaystyle H(S) = \sum_{c \in S} B^c \times P^i \mod MOD$ 
+    - Examples :
+        - $B = 2$ , $MOD = 2^{26} - 1$    , $P = \{118000 , 65000, 11011, 1751\}$
+        - $B = 7$ , $MOD = 228'511'817$   , $P = 31$
+        - $B = 10$, $MOD = 308'761'441$   , $P = 37$
+        - $B = 16$, $MOD = 1'058'313'049$ , $P = 53$
