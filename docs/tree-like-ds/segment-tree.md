@@ -1,69 +1,84 @@
 # Segment Tree
+
 ```cpp
-const int MAXN = 1e5+10;
-
-// Everything is ONE-INDEXED
-template <typename T>
-struct SegmentTree {
-
-    function<T(T, T)> combine;        // <T(const T&, const T&)>
-    // neutral element
-    T e;
-    T t[4*MAXN]; 
+struct seg_tree {
+    struct custom_node {};
+    typedef custom_node node;
     int n;
+    vector<node> t;
 
-    SegmentTree(function<T(T, T)> combine, T e, int n = MAXN-1) :
-    combine(combine), e(e), n(n) {}
+    seg_tree(int _n) : n(_n), t(vector<node>(4*_n+1)) {}
 
-    // a is ONE-INDEXED (can be an array)
-    template<typename M>
-    void build(vector<M> &a, int v = 1, int tl = 1, int tr = -1) {
-        if (tr == -1) tr = n;
+    node combine(const node& a, const node& b);
+    void push(int v);
+
+    void build(const vi& a) { _build(a, 1, 0, n-1); }
+    void update(int l, int r, int x) { _update(l, r, x, 1, 0, n-1); }
+    node query(int l, int r) { return _query(l, r, 1, 0, n-1); }
+
+    void _build(const vi& a, int v, int tl, int tr) {
         if (tl == tr) {
-            t[v] = a[tl];
+            // init t[v]
         } else {
             int tm = (tl + tr) / 2;
-            build(a, v*2, tl, tm);
-            build(a, v*2+1, tm+1, tr);
-            t[v] = combine(t[v*2], t[v*2+1]);
+            _build(a, v<<1, tl, tm);
+            _build(a, (v<<1)+1, tm+1, tr);
+            t[v] = combine(t[v<<1], t[(v<<1)+1]);
         }
     }
-    // pos is ONE-INDEXED
-    void update(int pos, T new_val, int v = 1, int tl = 1, int tr = -1) {
-        if (tr == -1) tr = n;
-        if (tl == tr) {
-            t[v] = new_val;
+    void _update(int l, int r, int x, int v, int tl, int tr) {
+        if (l > r) return;
+        if (tl == l && tr == r) {
+            // update t[v]
+            // update lazy variable in t[v] if lazy
         } else {
             int tm = (tl + tr) / 2;
-            if (pos <= tm)
-                update(pos, new_val, 2*v, tl, tm);
-            else
-                update(pos, new_val, 2*v+1, tm+1, tr);
-            t[v] = combine(t[v*2], t[v*2+1]);
+            push(v); // remove if not lazy
+            _update(l, min(r, tm), x, v<<1, tl, tm);
+            _update(max(l, tm+1), r, x, (v<<1)+1, tm+1, tr);
+            t[v] = combine(t[v<<1], t[(v<<1)+1]);
         }
     }
-    // l and r are ONE-INDEXED
-    T query(int l, int r, int v = 1, int tl = 1, int tr = -1) {
-        if (tr == -1) tr = n;
-        if (l > r) return e;
+    node _query(int l, int r, int v, int tl, int tr) {
         if (tl == l && tr == r) return t[v];
         int tm = (tl + tr) / 2;
+        push(v); // remove if not lazy
+        if (l > tm) return _query(l, r, (v<<1)+1, tm+1, tr);
+        if (r <= tm) return _query(l, r, v<<1, tl, tm);
         return combine(
-            query(l,   min(r, tm), 2*v ,  tl  , tm) ,
-            query(max(l, tm+1), r, 2*v+1, tm+1, tr)
+            _query(l, tm, v<<1, tl, tm),
+            _query(tm+1, r, (v<<1)+1, tm+1, tr)
         );
     }
 };
 ```
-How to use : 
+
+## Usage
+
+- intilize `seg_tree` by specifying its size `n`.
+- `build` builds the seg-tree by giving it an `vi` (you can change it to iterable of your liking).
+- define the `combine` function. `combine` can combine only a part of `node`.
+- if you're using lazy propagation define `push`.
+
+## Notes
+
+- if you want 2 of the same seg-tree (same method logic), just make another one with the struct and build it. Example:
+
 ```cpp
-SegmentTree<ll> sgt (
-    [](ll a, ll b){return max(a,b);}, /*combine*/
-    0ll,                             /*neutral*/ 
-    n                               /*n*/ 
-);
-sgt.build(v);                     /*vector<ll>*/
-sgt.query(l,r);
-sgt.update(i,50);
+seg_tree s1(n), s2(m);
+s1.build(a); s2.build(b);
 ```
-Now we can focus more on the logic of `combine`, and the structure of `Node`.
+
+- if you want 2 different seg-trees (different method logic), copy the struct, give it a new name and change methods directly. Example:
+
+```cpp
+struct seg_tree1 { ... } // min max seg tree
+struct seg_tree2 { ... } // lazy prop seg tree on strings
+.
+.
+.
+string s = ...;
+vi a = ...;
+seg_tree1 st1(s.size()); st1.build(s);
+seg_tree2 st2(a.size()); st2.build(a);
+```
