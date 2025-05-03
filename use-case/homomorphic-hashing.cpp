@@ -1,6 +1,8 @@
 /**
 * Not Rolling Hash ---But--> Segment Tree Hash (using homomorphic hashing)
-* Link : https://codeforces.com/contest/271/problem/D
+* Link : https://codeforces.com/group/YTYmnVxV00/contest/605439/problem/M
+* Group :   Tunisian CP community
+* Constest :  Code and Conquer 2.0
 */
 
 /**
