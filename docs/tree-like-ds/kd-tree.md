@@ -11,8 +11,8 @@ using Point = array<Unit,K>;
 Point origin = {};
 
 struct Node {
-    Point point; int dimension, before, after ;
-    Node(Point point, int dimension = 0, int before = -1, int after = -1)
+    Point point; int dimension, before, after, size;
+    Node(Point point, int dimension = 0, int before = -1, int after = -1, int size = 1)
     : point(point), dimension(dimension), before(before), after(after) {}
 };
 
@@ -27,6 +27,18 @@ Unit distance2box(Point a, Point start,Point end){
     rep(i,0,K)
         res += pow( max({start[i] - a[i], Unit(0), a[i] - end[i]}) ,2);
     return res;
+}
+bool intersection(Point a_start, Point a_end, Point b_start, Point b_end){
+    rep(i,0,K)
+    if( b_end[i] < a_start[i] || a_end[i] < b_start[i] )
+        return false;
+    return true;
+}
+bool inclusion(Point in_start, Point in_end, Point out_start, Point out_end){
+    rep(i,0,K)
+        if( out_start[i] > in_start[i] || in_end[i] > out_end[i] )
+            return false;
+    return true;
 }
 
 istream& operator>>(istream& os, Point& p){rep(i,0,K)cin >> p[i];return cin;}
@@ -43,10 +55,12 @@ struct KDTree {
 
         int mid = (l + r) / 2;
         int res = t.size();
-        t.pb(Node(v[mid], d, -1, -1));
+        t.pb(Node(v[mid], d));
 
+        t[res].size = r - l;
         t[res].before = build(v, (d+1)%K,     l, mid);
         t[res].after  = build(v, (d+1)%K, mid+1,   r);
+
         return res;
     }
 
@@ -66,31 +80,53 @@ struct KDTree {
         if(idx == 0){
             rep(i,0,K) start[i] = -UNIT_MAX, end[i] = UNIT_MAX;
         }
-        auto Nd = t[idx];
+        auto now = t[idx];
         // Update best
-        if( distance(q, Nd.point) < distance(q, t[best].point))
+        if( distance(q, now.point) < distance(q, t[best].point))
             best = idx;
+        
         // Getting Ready To Dive
-        auto new_end = end;
-        new_end[Nd.dimension] = Nd.point[Nd.dimension];
-        auto new_start = start;
-        new_start[Nd.dimension] = Nd.point[Nd.dimension];
+        auto new_start = start, new_end = end;
+        new_start[now.dimension] = new_end[now.dimension] = now.point[now.dimension];
         // Where To Go First
-        if( q[Nd.dimension] <= Nd.point[Nd.dimension] ) // before first
+        if( q[now.dimension] <= now.point[now.dimension] ) // before first
         {
-            best = nearest(q, Nd.before, best, start, new_end);
+            best = nearest(q, now.before, best, start, new_end);
             // Should We Go ?
             if( distance2box(q, new_start, end) < distance(q, t[best].point))
-                best = nearest(q, Nd.after, best, new_start, end);
+                best = nearest(q, now.after, best, new_start, end);
         }
         else
         {
-            best = nearest(q, Nd.after, best, new_start, end);
+            best = nearest(q, now.after, best, new_start, end);
             // Should We Go ?
             if( distance2box(q, start, new_end) < distance(q, t[best].point))
-                best = nearest(q, Nd.before, best, start, new_end);
+                best = nearest(q, now.before, best, start, new_end);
         }
         return best;
+    }
+    int range_count(Point& range_start, Point& range_end, int idx=0, Point start={}, Point end={}){
+        if(idx == -1)
+            return 0;    
+        if(idx == 0){
+            rep(i,0,K) start[i] = -UNIT_MAX, end[i] = UNIT_MAX;
+        }
+        auto now = t[idx];
+        if(!intersection(range_start, range_end, start, end))
+            return 0;
+        if(inclusion(start, end, range_start, range_end))
+            return now.size;
+        else{
+            // Getting Ready To Dive
+            auto new_start = start, new_end = end;
+            new_start[now.dimension] = new_end[now.dimension] = now.point[now.dimension];
+            return
+            range_count(range_start, range_end, now.before, start, new_end)
+            +
+            range_count(range_start, range_end, now.after , new_start, end)
+            +
+            intersection(range_start, range_end, now.point, now.point);
+        }
     }
 };
 ```
@@ -101,8 +137,9 @@ struct KDTree {
     KDTree kdt;
     kdt.build(v);
     /*...*/
-    Point q;
+    Point q, a, b;
     int idx = kdt.query(q);
+    int cnt = kdt.range_count(a,b);
 ```
 
 ## Notes
