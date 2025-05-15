@@ -55,7 +55,7 @@ struct KDTree {
 
         int mid = (l + r) / 2;
         int res = t.size();
-        t.pb(Node(v[mid], d));
+        t.push_back(Node(v[mid], d));
 
         t[res].size = r - l;
         t[res].before = build(v, (d+1)%K,     l, mid);
@@ -134,6 +134,8 @@ struct KDTree {
 ## Usage
 
 ```cpp
+    vector<Point> v;
+    /*...*/
     KDTree kdt;
     kdt.build(v);
     /*...*/
