@@ -1,11 +1,19 @@
-# KD Tree
-
-```cpp
+/**
+* KDTree - modified use case (nearest point not equal to query point)
+* Link : www.spoj.com/problems/FAILURE/
+*/
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,a,b) for(int i = (a); i < (b) ; i++)
+#define pb push_back
 // The following 3 instructions need to be updated
 const int K = 2;
-using Unit = double; 
-Unit UNIT_MAX = 1e9; //beware of overflow
+using Unit = long long; 
+Unit UNIT_MAX = 1e9; 
 
+inline Unit pow( Unit x , int y ){
+    return x*x;
+}
 
 using Point = array<Unit,K>;
 Point origin = {};
@@ -58,8 +66,10 @@ struct KDTree {
         t.push_back(Node(v[mid], d));
 
         t[res].size = r - l;
-        t[res].before = build(v, (d+1)%K,     l, mid); // use a tmp var --> c++14 compatible
-        t[res].after  = build(v, (d+1)%K, mid+1,   r);
+        auto tmp = build(v, (d+1)%K,     l, mid);
+        t[res].before = tmp;
+        tmp = build(v, (d+1)%K, mid+1,   r);
+        t[res].after  = tmp;
 
         return res;
     }
@@ -78,13 +88,15 @@ struct KDTree {
         if(idx == -1)
             return best;    
         if(idx == 0){
-            rep(i,0,K) start[i] = -UNIT_MAX, end[i] = UNIT_MAX;
+            rep(i,0,K) start[i] = 0, end[i] = UNIT_MAX; // Adapted to the problem
+            if(t[0].point == q) // Only on the first iteration // Adapted to the problem
+                best = 1;
         }
         auto now = t[idx];
         // Update best
-        if( distance(q, now.point) < distance(q, t[best].point))
+        if( now.point == q); // Adapted to the problem
+        else if(distance(q, now.point) < distance(q, t[best].point)) // Adapted to the problem
             best = idx;
-        
         // Getting Ready To Dive
         auto new_start = start, new_end = end;
         new_start[now.dimension] = new_end[now.dimension] = now.point[now.dimension];
@@ -109,7 +121,7 @@ struct KDTree {
         if(idx == -1)
             return 0;    
         if(idx == 0){
-            rep(i,0,K) start[i] = -UNIT_MAX, end[i] = UNIT_MAX;
+            rep(i,0,K) start[i] = 0, end[i] = UNIT_MAX; // Adapted to the problem
         }
         auto now = t[idx];
         if(!intersection(range_start, range_end, start, end))
@@ -128,25 +140,30 @@ struct KDTree {
             intersection(range_start, range_end, now.point, now.point);
         }
     }
+    void clear(){
+        t.clear();
+    }
 };
-```
 
-## Usage
-
-```cpp
-    vector<Point> v;
-    vector<Point> v_copy; // since build modifies the order
-    /*...*/
+void solve(){
+    int n;
+    cin >> n;
+    vector<Point> v(n);
+    rep(i,0,n)
+        cin >> v[i];
+    vector<Point> vcopy = v;
     KDTree kdt;
-    kdt.build(v_copy);
-    /*...*/
-    Point q, a, b;
-    int idx = kdt.query(q);
-    int cnt = kdt.range_count(a,b);
-```
+    kdt.build(vcopy);
+    rep(i,0,n)
+        // cout << distance(v[i], kdt.t[0].point)<< "\n";
+        cout << distance(v[i], kdt.t[kdt.nearest(v[i])].point)<< "\n";
+}
 
-## Notes
-
-- We can add a  `delete`       function (store a link to parent)
-- We can add an `insert`       function (dive then push)
-- We can add a  `countInBox` function (store the size + `boxesIntersect` function)
+int main(){
+    ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    int t = 1;
+    cin >> t;
+    while(t--){
+        solve();
+    }
+}
