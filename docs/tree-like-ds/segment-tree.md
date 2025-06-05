@@ -10,7 +10,10 @@ struct seg_tree {
     seg_tree(int _n) : n(_n), t(vector<node>(4*_n+1)) {}
 
     node combine(const node& a, const node& b){};
-    void push(int v){};
+    void push(int v, int tl, int tr){
+        if(tl==tr)return;
+        // ...
+    };
 
     void build(const vi& a) { _build(a, 1, 0, n-1); }
     void update(int l, int r, int x) { _update(l, r, x, 1, 0, n-1); }
@@ -33,7 +36,7 @@ struct seg_tree {
             // update lazy variable in t[v] if lazy
         } else {
             int tm = (tl + tr) >> 1;
-            push(v); // remove if not lazy
+            push(v, tl, tr); // remove if not lazy
             _update(l, min(r, tm), x, v<<1, tl, tm);
             _update(max(l, tm+1), r, x, (v<<1)+1, tm+1, tr);
             t[v] = combine(t[v<<1], t[(v<<1)+1]);
@@ -42,7 +45,7 @@ struct seg_tree {
     node _query(int l, int r, int v, int tl, int tr) {
         if (tl == l && tr == r) return t[v];
         int tm = (tl + tr) >> 1;
-        push(v); // remove if not lazy
+        push(v, tl, tr); // remove if not lazy
         if (l > tm) return _query(l, r, (v<<1)+1, tm+1, tr);
         if (r <= tm) return _query(l, r, v<<1, tl, tm);
         return combine(
