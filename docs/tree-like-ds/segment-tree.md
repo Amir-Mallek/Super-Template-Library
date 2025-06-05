@@ -1,58 +1,59 @@
 # Segment Tree
 
 ```cpp
+struct custom_node {};
+typedef custom_node node;
+inline node combine(const node& a, const node& b){};
+
 struct seg_tree {
-    struct custom_node {};
-    typedef custom_node node;
-    int n;
-    vector<node> t;
+	int n;
+	bool isBuilt = false;
+	vector<node> t;
 
-    seg_tree(int _n) : n(_n), t(vector<node>(4*_n+1)) {}
+	seg_tree(int _n) : n(_n), t(4*_n+1) {}
 
-    node combine(const node& a, const node& b){};
-    void push(int v, int tl, int tr){
-        if(tl==tr)return;
-        // ...
-    };
+	void push(int v, int tl, int tr){
+		// ...
+	}
 
-    void build(const vi& a) { _build(a, 1, 0, n-1); }
-    void update(int l, int r, int x) { _update(l, r, x, 1, 0, n-1); }
-    node query(int l, int r) { return _query(l, r, 1, 0, n-1); }
+	void build(const vi& a) { _build(a, 1, 0, n-1); isBuilt = true; }
+	void update(int l, int r, int x) { assert(isBuilt); _update(l, r, x, 1, 0, n-1); }
+	node query(int l, int r) { assert(isBuilt); return _query(l, r, 1, 0, n-1); }
 
-    void _build(const vi& a, int v, int tl, int tr) {
-        if (tl == tr) {
-            // init t[v]
-        } else {
-            int tm = (tl + tr) >> 1;
-            _build(a, v<<1, tl, tm);
-            _build(a, (v<<1)+1, tm+1, tr);
-            t[v] = combine(t[v<<1], t[(v<<1)+1]);
-        }
-    }
-    void _update(int l, int r, int x, int v, int tl, int tr) {
-        if (l > r) return;
-        if (tl == l && tr == r) {
-            // update t[v]
-            // update lazy variable in t[v] if lazy
-        } else {
-            int tm = (tl + tr) >> 1;
-            push(v, tl, tr); // remove if not lazy
-            _update(l, min(r, tm), x, v<<1, tl, tm);
-            _update(max(l, tm+1), r, x, (v<<1)+1, tm+1, tr);
-            t[v] = combine(t[v<<1], t[(v<<1)+1]);
-        }
-    }
-    node _query(int l, int r, int v, int tl, int tr) {
-        if (tl == l && tr == r) return t[v];
-        int tm = (tl + tr) >> 1;
-        push(v, tl, tr); // remove if not lazy
-        if (l > tm) return _query(l, r, (v<<1)+1, tm+1, tr);
-        if (r <= tm) return _query(l, r, v<<1, tl, tm);
-        return combine(
-            _query(l, tm, v<<1, tl, tm),
-            _query(tm+1, r, (v<<1)+1, tm+1, tr)
-        );
-    }
+	void _build(const vi& a, int v, int tl, int tr) {
+		if (tl == tr) {
+			// init t[v]
+		} else {
+			int tm = (tl + tr) >> 1;
+			_build(a, v<<1, tl, tm);
+			_build(a, (v<<1)+1, tm+1, tr);
+			t[v] = combine(t[v<<1], t[(v<<1)+1]);
+		}
+	}
+	void _update(int l, int r, int x, int v, int tl, int tr) {
+		if (l > r) return;
+		if (tl == l && tr == r) {
+			// update t[v]
+			// update lazy variable in t[v] if lazy
+		} else {
+			int tm = (tl + tr) >> 1;
+			push(v, tl, tr); // remove if not lazy
+			_update(l, min(r, tm), x, v<<1, tl, tm);
+			_update(max(l, tm+1), r, x, (v<<1)+1, tm+1, tr);
+			t[v] = combine(t[v<<1], t[(v<<1)+1]);
+		}
+	}
+	node _query(int l, int r, int v, int tl, int tr) {
+		if (tl == l && tr == r) return t[v];
+		int tm = (tl + tr) >> 1;
+		push(v, tl, tr); // remove if not lazy
+		if (l > tm) return _query(l, r, (v<<1)+1, tm+1, tr);
+		if (r <= tm) return _query(l, r, v<<1, tl, tm);
+		return combine(
+			_query(l, tm, v<<1, tl, tm),
+			_query(tm+1, r, (v<<1)+1, tm+1, tr)
+		);
+	}
 };
 ```
 
