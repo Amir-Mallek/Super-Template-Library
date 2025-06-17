@@ -4,6 +4,18 @@ Use it for a short, simple & efficient code. (Always 1-indexed)
 
 Only for reversible operations.
 
+Please make sure to have these implemented : 
+```cpp
+struct T{
+    T(){}
+    T  operator+ (const T x);
+    T& operator+=(const T x);
+    T  operator- (const T x);
+    T  operator- ();
+    friend T operator*(int r, const T x);
+}
+```
+
 ## Classic BIT
 ```cpp
 template <class T>
