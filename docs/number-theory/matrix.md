@@ -156,7 +156,7 @@ $a_i = (c_1 \cdot a_{i-1} + c_2 \cdot a_{i-2} + \cdots + c_n \cdot a_{i-n}) + p 
 
 $$
 \begin{bmatrix}
-c_1 & c_2 & \cdots & c_{n-1} & c_n & 1 & 1 & 1 \\
+c_1 & c_2 & \cdots & c_{n-1} & c_n & p & q & r \\
 1   & 0   & \cdots & 0   & 0 & 0 & 0 & 0 \\
 0   & 1   & \cdots & 0   & 0 & 0 & 0 & 0 \\
 \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \vdots & \vdots \\
