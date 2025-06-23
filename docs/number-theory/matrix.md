@@ -178,7 +178,7 @@ i^2
 \end{bmatrix}
 $$
 
-- If you prove if some $(S, \oplus, \otimes)$ is a semi-ring than you can use these new operation in the matrix multiplication.
+- If you prove $(S, \oplus, \otimes)$ is a semi-ring than you can use these new operations in the matrix multiplication.
 
 example: $S = \mathbb{Z}_{< \text{LLMAX}}$,  $a \oplus b := \min(a, b)$, $\quad a \otimes b := a + b$.
 
