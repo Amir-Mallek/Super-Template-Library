@@ -48,7 +48,7 @@ vi match(const T& s, const T& t) {
 ### Usage
 
 - `prefix_function` takes a string or a vector of anything comparable `s` and returns of a vector containing pi for every index. Complexity is $O(|s|)$.
-- `match` takes a container `s` and a target `t` and returns the indices of the beginings of each match. Complexity is $O(|t|+|s|)$.
+- `match` takes a container `s` and a target `t` and returns the indices of the beginnings of each match. Complexity is $O(|t|+|s|)$.
 
 ## Rolling Hash
 

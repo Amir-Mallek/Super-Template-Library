@@ -1,3 +1,5 @@
+# Matrix Manipulation
+
 ```cpp
 template<typename T, int N, int M>
 struct Matrix {
@@ -141,3 +143,45 @@ struct Matrix {
     }
 };
 ```
+
+## Notes
+
+- If you have $q$ queries and in each query you will calculate $A \cdot M^n$ ($A$ is a column vector), the complexity will be $\mathcal{O}(Q \cdot N^3 \cdot \log_2 N)$.
+To improve this, precompute for every $0 \leq i \leq \log_2 N$, the matrices $M^{2^i}$, and then to answer each query multiply the column vector by the corresponding powers of two from the binary representation of $n$.
+Example: $((A \cdot M^2) \cdot M^8) \cdot M^{16}$. The time complexity will now be $\mathcal{O}(N^3 \cdot \log_2 N + Q \cdot N^2 \cdot \log_2 N)$
+
+- To calculate this:
+
+$a_i = (c_1 \cdot a_{i-1} + c_2 \cdot a_{i-2} + \cdots + c_n \cdot a_{i-n}) + p + i \cdot q + i^2 \cdot r$
+
+$
+\begin{bmatrix}
+c_1 & c_2 & \cdots & c_{n-1} & c_n & 1 & 1 & 1 \\
+1   & 0   & \cdots & 0   & 0 & 0 & 0 & 0 \\
+0   & 1   & \cdots & 0   & 0 & 0 & 0 & 0 \\
+\vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+0 & 0 & \cdots & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & \cdots & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & \cdots & 0 & 0 & 1 & 1 & 0 \\
+0 & 0 & \cdots & 0 & 0 & 1 & 2 & 1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+a_{i-1} \\
+a_{i-2} \\
+a_{i-3} \\
+\vdots \\
+a_{i-n} \\
+1 \\
+i \\
+i^2
+\end{bmatrix}
+$
+
+- If you prove if some $(S, \oplus, \otimes)$ is a semi-ring than you can use these new operation in the matrix multiplication.
+
+example: $S = \mathbb{Z}_{< \text{LLMAX}}$,  $a \oplus b := \min(a, b)$, $\quad a \otimes b := a + b$.
+
+- If you want to convert a problem to a matrix exponentiation problem you need to make it so `new_dp[i] = some linear function of prev_dp[j]` 
+
+- Practise problems in ascending difficulty: [https://codeforces.com/gym/102644]
