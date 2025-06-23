@@ -154,7 +154,7 @@ Example: $((A \cdot M^2) \cdot M^8) \cdot M^{16}$. The time complexity will now 
 
 $a_i = (c_1 \cdot a_{i-1} + c_2 \cdot a_{i-2} + \cdots + c_n \cdot a_{i-n}) + p + i \cdot q + i^2 \cdot r$
 
-$
+$$
 \begin{bmatrix}
 c_1 & c_2 & \cdots & c_{n-1} & c_n & 1 & 1 & 1 \\
 1   & 0   & \cdots & 0   & 0 & 0 & 0 & 0 \\
@@ -176,7 +176,7 @@ a_{i-n} \\
 i \\
 i^2
 \end{bmatrix}
-$
+$$
 
 - If you prove if some $(S, \oplus, \otimes)$ is a semi-ring than you can use these new operation in the matrix multiplication.
 
